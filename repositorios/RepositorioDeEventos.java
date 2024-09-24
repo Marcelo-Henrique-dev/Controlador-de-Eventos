@@ -1,6 +1,17 @@
 package repositorios;
 
+import java.util.ArrayList;
+
+import entidades.Evento;
+
 public class RepositorioDeEventos {
-    // Criar repositório sem estrutura de dados usando arraylist mesmo
-    // Criar um método que retorne o arraylist de eventos
+    private ArrayList<Evento> eventos;
+
+    public RepositorioDeEventos(){
+        this.eventos = new ArrayList<Evento>();
+    }
+
+    public ArrayList<Evento> ListarEventos(){
+        return this.eventos;
+    }
 }
