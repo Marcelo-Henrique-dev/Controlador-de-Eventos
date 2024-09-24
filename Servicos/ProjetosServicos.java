@@ -1,6 +1,4 @@
-package Servicos;
-
-import java.util.ArrayList;
+package servicos;
 
 import entidades.Evento;
 import interfaces.IEventoServices;
