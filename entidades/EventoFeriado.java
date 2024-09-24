@@ -5,7 +5,7 @@ import entidades.enums.TipoEvento;
 public class EventoFeriado extends Evento {
     private String motivo;
 
-    public EventoFeriado(String nome, String data, String motivo, double valorIngresso, int quantidadeVagas) {
+    public EventoFeriado(String nome, String data, double valorIngresso, int quantidadeVagas, String motivo) {
         super(nome, data, valorIngresso, quantidadeVagas, TipoEvento.EVENTOFERIADO);
         this.motivo = motivo;
     }
