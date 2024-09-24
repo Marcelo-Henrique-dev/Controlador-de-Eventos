@@ -1,17 +1,18 @@
 package repositorios;
 
-import java.util.ArrayList;
+import java.util.LinkedList;
 
 import entidades.Evento;
 
-public class RepositorioDeEventos {
-    private ArrayList<Evento> eventos;
+public class RepositorioDeEventos{
+
+    private LinkedList<Evento> eventos;
 
     public RepositorioDeEventos(){
-        this.eventos = new ArrayList<Evento>();
+        this.eventos = new LinkedList<Evento>();
     }
 
-    public ArrayList<Evento> ListarEventos(){
+    public LinkedList<Evento> ListarEventos(){
         return this.eventos;
     }
 }
