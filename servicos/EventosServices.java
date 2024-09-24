@@ -9,6 +9,7 @@ import entidades.EventoIgreja;
 import entidades.EventoPalestra;
 import entidades.EventoReuniao;
 import entidades.EventoShow;
+import entidades.Pessoa;
 import entidades.enums.EnumEventoException;
 import entidades.enums.TipoEvento;
 import exceptions.InvalidEventoTypeException;
@@ -44,31 +45,32 @@ public class EventosServices implements IEventoServices {
         String palestrante = "";
         String assunto = "";
         String artista = "";
-        if(tipoOpc == 1){
+        if (tipoOpc == 1) {
             System.out.println("Motivo:");
             motivo = scanner.nextLine();
-        }else if(tipoOpc == 2){
+        } else if (tipoOpc == 2) {
             System.out.println("Curso:");
             curso = scanner.nextLine();
-        }else if(tipoOpc == 3){
+        } else if (tipoOpc == 3) {
             System.out.println("Padre:");
             padre = scanner.nextLine();
-        }else if(tipoOpc == 4){
+        } else if (tipoOpc == 4) {
             System.out.println("Palestrante:");
             palestrante = scanner.nextLine();
-        }else if(tipoOpc == 5){
+        } else if (tipoOpc == 5) {
             System.out.println("Assunto:");
             assunto = scanner.nextLine();
-        }else if(tipoOpc == 6){
+        } else if (tipoOpc == 6) {
             System.out.println("Artista:");
             artista = scanner.nextLine();
         }
-        Evento evento = criarEvento(nome, data, valorIngresso, quantidadeVagas, tipoEvento, motivo, curso, padre, palestrante, assunto, artista);
-        if(evento != null){
+        Evento evento = criarEvento(nome, data, valorIngresso, quantidadeVagas, tipoEvento, motivo, curso, padre,
+                palestrante, assunto, artista);
+        if (evento != null) {
             eventos.ListarEventos().add(evento);
             System.out.println("Evento agendado com sucesso!");
             System.out.println("=============================================");
-        }else{
+        } else {
             throw new InvalidEventoTypeException(EnumEventoException.TIPO_INVALIDO.toString());
         }
     }
@@ -214,6 +216,84 @@ public class EventosServices implements IEventoServices {
         Evento eventoSelecionado = eventos.ListarEventos().get(opc);
         System.out.println("Evento " + eventoSelecionado.getNome() + " Cancelado com sucesso!");
         eventos.ListarEventos().remove(eventoSelecionado);
+    }
+
+    // INSTÂNCIA DO REPOSITÓRIO DE PARTICIPANTES
+
+    public void cadastrarParticipante() {
+        System.out.println("Você deseja cadastrar em qual evento? (pelo id)");
+        int opc = scanner.nextInt();
+        scanner.nextLine();
+        Evento eventoSelecionado = eventos.ListarEventos().get(opc);
+        System.out.println("Nome do participante : ");
+        String nome = scanner.nextLine();
+        System.out.println("Idade do participante : ");
+        int idade = scanner.nextInt();
+        scanner.nextLine();
+        System.out.println("Dinheiro do participante : ");
+        double dinheiro = scanner.nextDouble();
+        scanner.nextLine();
+        System.out.println("CPF do participante : ");
+        String cpf = scanner.nextLine();
+        Pessoa pessoa = new Pessoa(nome, idade, dinheiro, cpf);
+        eventoSelecionado.listarPessoas().add(pessoa);
+    }
+
+    public void editarParticipante() {
+        listarEventos();
+        System.out.println("Em qual evento está o participante? (Por id)");
+        int opc = scanner.nextInt();
+        scanner.nextLine();
+        Evento eventoSelecionado = eventos.ListarEventos().get(opc);
+        mostrarParticipantes(opc);
+        System.out.println("Qual participante deseja editar? (Por id)");
+        int opcParticipante = scanner.nextInt();
+        scanner.nextLine(); 
+        Pessoa pessoa = eventoSelecionado.listarPessoas().get(opcParticipante);
+        System.out.println("Qual novo nome ? ");
+        String novoNome = scanner.nextLine();
+        pessoa.setNome(novoNome);
+        System.out.println("Qual nova idade ? ");
+        int novaIdade = scanner.nextInt();
+        scanner.nextLine();
+        pessoa.setIdade(novaIdade);
+        System.out.println("Qual novo dinheiro ? ");
+        double novoDinheiro = scanner.nextDouble();
+        scanner.nextLine();
+        pessoa.setDinheiro(novoDinheiro);
+        System.out.println("Qual novo CPF ? ");
+        String novoCpf = scanner.nextLine();
+        scanner.nextLine();
+        pessoa.setCpf(novoCpf);
+    }
+
+    public void mostrarParticipantes(int index) {
+        Evento eventoSelecionado = eventos.ListarEventos().get(index);
+        System.out.println("========================");
+        for (int i = 0; i < eventoSelecionado.listarPessoas().size(); i++) {
+            Pessoa pessoa = eventoSelecionado.listarPessoas().get(i);
+            System.out.println("Id: " + i);
+            System.out.println("Nome: " + pessoa.getNome());
+            System.out.println("Idade: " + pessoa.getIdade());
+            System.out.println("Cpf: " + pessoa.getCpf());
+            System.out.println("Dinheiro: " + pessoa.getDinheiro());
+            System.out.println("========================");
+        }
+    }
+
+    public void apagarParticipante() {
+        listarEventos();
+        System.out.println("Qual evento o participante está cadastrado? (pelo id)");
+        int opc = scanner.nextInt();
+        scanner.nextLine();
+        Evento eventoSelecionado = eventos.ListarEventos().get(opc);
+        mostrarParticipantes(opc);
+        System.out.println("Qual o participante você deseja apagar? (pelo id)");
+        int opcParticipante = scanner.nextInt();
+        scanner.nextLine();
+        Pessoa participante = eventoSelecionado.listarPessoas().get(opcParticipante);
+        eventoSelecionado.listarPessoas().remove(participante);
+        System.out.println("Participante apagado com sucesso!");
     }
 
 }

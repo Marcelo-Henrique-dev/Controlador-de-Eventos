@@ -12,6 +12,7 @@ public class Main{
         do{
             System.out.println("|======- Menu -======|");
             System.out.println("| 1 - Cadastra evento | 2 - Visualizar eventos | 3 - Editar Evento | 4 - Cancelar Evento |");
+            System.out.println("| 5 - Cadastrar Participante | 6 - Listar Participantes | 7 - Editar Participantes | 8 - Apagar Participantes |");
             System.out.println("| 0 - Sair |");
             opc = scanner.nextInt();
             scanner.nextLine();
@@ -27,14 +28,28 @@ public class Main{
                     break;
                 case 4:
                     eventosServices.apagarEvento();
+                    break;
+                case 5:
+                    eventosServices.cadastrarParticipante();
+                    break;
+                case 6:
+                    System.out.println("Qual evento você deseja ver os participantes?");
+                    eventosServices.listarEventos();
+                    int opcEvento = scanner.nextInt();
+                    scanner.nextLine();
+                    eventosServices.mostrarParticipantes(opcEvento);
+                    break;
+                case 7:
+                    eventosServices.editarParticipante();
+                    break;
+                case 8:
+                    eventosServices.apagarParticipante();
+                    break;
                 default:
                     System.out.println("Opção Inválida");
                     break;
             }
         }while(opc != 0);
-
-
-
     }
 
 }
