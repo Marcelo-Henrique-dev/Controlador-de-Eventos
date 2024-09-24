@@ -1,5 +1,5 @@
 package entidades;
-
+import java.util.ArrayList;
 import entidades.enums.TipoEvento;
 
 public abstract class Evento {
@@ -56,4 +56,5 @@ public abstract class Evento {
     public TipoEvento getTipoEvento(){
         return this.tipoEvento;
     }
+   
 }
