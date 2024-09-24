@@ -1,4 +1,4 @@
-package Servicos;
+package servicos;
 
 import entidades.Evento;
 import entidades.EventoFeriado;
