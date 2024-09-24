@@ -1,10 +1,12 @@
 package entidades;
 
+import entidades.enums.TipoEvento;
+
 public class EventoReuniao extends Evento {
     private String assunto;
 
-    public EventoReuniao(String nome, String data, String local, String assunto) {
-        super(nome, data, local);
+    public EventoReuniao(String nome, String data, double valorIngresso, int quantidadeVagas, String assunto) {
+        super(nome, data, valorIngresso, quantidadeVagas, TipoEvento.EVENTOREUNIAO);
         this.assunto = assunto;
     }
 
