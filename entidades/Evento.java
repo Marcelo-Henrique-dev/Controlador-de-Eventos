@@ -1,20 +1,20 @@
 package entidades;
 
-
-    // Criar classe abstrata
-    // atriburos padrões: nome do evento, data do evento, valor do ingresso, quantidade de vagas
+import entidades.enums.TipoEvento;
 
 public abstract class Evento {
     private String nome;
     private String data;
+    private TipoEvento tipoEvento;
     private double valorIngresso;
     private int quantidadeVagas;
 
-    public Evento(String nome, String data, double valorIngresso, int quantidadeVagas) {
+    public Evento(String nome, String data, double valorIngresso, int quantidadeVagas, TipoEvento tipoEvento) {
         this.nome = nome;
         this.data = data;
         this.valorIngresso = valorIngresso;
         this.quantidadeVagas = quantidadeVagas;
+        this.tipoEvento = tipoEvento;
     }
 
     public Evento(String nome2, String data2, String local) {
@@ -51,5 +51,9 @@ public abstract class Evento {
 
     public void setQuantidadeVagas(int quantidadeVagas) {
         this.quantidadeVagas = quantidadeVagas;
+    }
+
+    public TipoEvento getTipoEvento(){
+        return this.tipoEvento;
     }
 }
