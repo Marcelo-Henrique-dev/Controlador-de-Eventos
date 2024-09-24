@@ -6,7 +6,7 @@ public class EventoReuniao extends Evento {
     private ArrayList<Pessoa> vagasReuniao;
     private String assunto;
 
-    public EventoReuniao(String nome, String data, double valorIngresso, int quantidadeVagas, String assunto, Pessoa vagasReuniao) {
+    public EventoReuniao(String nome, String data, double valorIngresso, int quantidadeVagas, String assunto) {
         super(nome, data, valorIngresso, quantidadeVagas, TipoEvento.EVENTOREUNIAO);
         this.assunto = assunto;
         this.vagasReuniao = new ArrayList<Pessoa>(this.getQuantidadeVagas());
