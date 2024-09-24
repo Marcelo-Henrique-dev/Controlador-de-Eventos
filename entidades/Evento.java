@@ -56,4 +56,5 @@ public abstract class Evento {
     public TipoEvento getTipoEvento(){
         return this.tipoEvento;
     }
+   
 }
