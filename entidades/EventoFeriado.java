@@ -19,4 +19,10 @@ public class EventoFeriado extends Evento {
     public void setMotivo(String motivo) {
         this.motivo = motivo;
     }
+
+    public ArrayList<Pessoa> listarPessoas(){
+         return this.vagasFeriado;
+    }
+
+
 }

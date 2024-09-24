@@ -1,5 +1,5 @@
 package entidades;
-import java.util.ArrayList;
+
 import entidades.enums.TipoEvento;
 
 public abstract class Evento {
