@@ -9,6 +9,10 @@ public class Main{
     public static EventosServices eventosServices = new EventosServices();
     public static void main(String[] args) throws InvalidEventoTypeException {
         int opc;
+        System.out.println("=================================");
+        System.out.println("| Projeto feito por: |");
+        System.out.println("| Marcelo Henrique | Aquiles Arruda | José Renato | Adriano Ramos |");
+        System.out.println("=================================");
         do{
             System.out.println("|======- Menu -======|");
             System.out.println("| 1 - Cadastra evento | 2 - Visualizar eventos | 3 - Editar Evento | 4 - Cancelar Evento |");
