@@ -45,6 +45,9 @@ public class Main{
                 case 8:
                     eventosServices.apagarParticipante();
                     break;
+                case 0:
+                    System.out.println("Saindo...");
+                    break;
                 default:
                     System.out.println("Opção Inválida");
                     break;
