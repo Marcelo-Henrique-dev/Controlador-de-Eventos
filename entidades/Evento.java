@@ -4,24 +4,22 @@ import entidades.enums.TipoEvento;
 import java.util.ArrayList;
 
 public abstract class Evento {
+    private int id;
     private String nome;
-    private String data;
+    private String dataEvento;
     private TipoEvento tipoEvento;
     private double valorIngresso;
     private int quantidadeVagas;
-    private ArrayList<Pessoa> pessoas;
+    private ArrayList<Cliente> pessoas;
 
-    public Evento(String nome, String data, double valorIngresso, int quantidadeVagas, TipoEvento tipoEvento) {
+    public Evento(int id, String nome, String data, double valorIngresso, int quantidadeVagas, TipoEvento tipoEvento) {
+        this.id = id;
         this.nome = nome;
-        this.data = data;
+        this.dataEvento = data;
         this.valorIngresso = valorIngresso;
         this.quantidadeVagas = quantidadeVagas;
         this.tipoEvento = tipoEvento;
-        this.pessoas = new ArrayList<Pessoa>(this.quantidadeVagas);
-    }
-
-    public Evento(String nome2, String data2, String local) {
-        
+        this.pessoas = new ArrayList<Cliente>(this.quantidadeVagas);
     }
 
     public String getNome() {
@@ -33,11 +31,11 @@ public abstract class Evento {
     }
 
     public String getData() {
-        return data;
+        return dataEvento;
     }
 
     public void setData(String data) {
-        this.data = data;
+        this.dataEvento = data;
     }
 
     public double getValorIngresso() {
@@ -60,8 +58,15 @@ public abstract class Evento {
         return this.tipoEvento;
     }
 
-    public ArrayList<Pessoa> listarPessoas(){
+    public ArrayList<Cliente> listarPessoas(){
         return this.pessoas;
+    }
+
+    public void setId(int id){
+        this.id = id;
+    }
+    public int getId(){
+        return this.id;
     }
    
 }

@@ -4,8 +4,8 @@ import entidades.enums.TipoEvento;
 public class EventoIgreja extends Evento {
     private String padre;
 
-    public EventoIgreja(String nome, String data, double valorIngresso, int quantidadeVagas, String padre) {
-        super(nome, data, valorIngresso, quantidadeVagas, TipoEvento.EVENTOIGREJA);
+    public EventoIgreja(int id, String nome, String data, double valorIngresso, int quantidadeVagas, String padre) {
+        super(id, nome, data, valorIngresso, quantidadeVagas, TipoEvento.EVENTOIGREJA);
         this.padre = padre;
     }
 

@@ -1,22 +1,29 @@
+import java.sql.SQLException;
 import java.util.Scanner;
 
 import exceptions.InvalidEventoTypeException;
+import servicos.ClientesServices;
 import servicos.EventosServices;
 
 public class Main{
     
-    public static Scanner scanner = new Scanner(System.in);
-    public static EventosServices eventosServices = new EventosServices();
-    public static void main(String[] args) throws InvalidEventoTypeException {
+    private static Scanner scanner = new Scanner(System.in);
+    private static EventosServices eventosServices = new EventosServices();
+    private static ClientesServices clientesServices = new ClientesServices();
+    public static void main(String[] args) throws InvalidEventoTypeException, SQLException {
         int opc;
         do{
             System.out.println("|======- Menu -======|");
-            System.out.println("| 1 - Cadastra evento | 2 - Visualizar eventos | 3 - Editar Evento | 4 - Cancelar Evento |");
-            System.out.println("| 5 - Cadastrar Participante | 6 - Listar Participantes | 7 - Editar Participantes | 8 - Apagar Participantes |");
+            System.out.println("| 1 - Cadastra evento | 2 - Visualizar eventos por tipo | 3 - Editar Evento | 4 - Cancelar Evento |");
+            System.out.println("| 5 - Cadastrar Cliente | 6 - Listar Clientes | 7 - Editar Cliente | 8 - Apagar Cliente |");
             System.out.println("| 0 - Sair |");
+            System.out.println("|====================");
             opc = scanner.nextInt();
             scanner.nextLine();
             switch (opc) {
+                case 0:
+                    System.out.println("Saindo...");
+                    break;
                 case 1:
                     eventosServices.cadastrarEventoNoRepositorio();
                     break;
@@ -30,20 +37,16 @@ public class Main{
                     eventosServices.apagarEvento();
                     break;
                 case 5:
-                    eventosServices.cadastrarParticipante();
+                    clientesServices.cadastrarCliente();
                     break;
                 case 6:
-                    System.out.println("Qual evento você deseja ver os participantes?");
-                    eventosServices.listarEventos();
-                    int opcEvento = scanner.nextInt();
-                    scanner.nextLine();
-                    eventosServices.mostrarParticipantes(opcEvento);
+                    clientesServices.listarClientesPorEvento();
                     break;
                 case 7:
-                    eventosServices.editarParticipante();
+                    clientesServices.editarCliente();
                     break;
                 case 8:
-                    eventosServices.apagarParticipante();
+                    clientesServices.deletarCliente();
                     break;
                 default:
                     System.out.println("Opção Inválida");

@@ -1,5 +1,6 @@
 package servicos;
 
+import java.sql.SQLException;
 import java.util.Scanner;
 
 import entidades.Evento;
@@ -9,8 +10,6 @@ import entidades.EventoIgreja;
 import entidades.EventoPalestra;
 import entidades.EventoReuniao;
 import entidades.EventoShow;
-import entidades.Pessoa;
-import entidades.enums.EnumEventoException;
 import entidades.enums.TipoEvento;
 import exceptions.InvalidEventoTypeException;
 import interfaces.IEventoServices;
@@ -23,7 +22,7 @@ public class EventosServices implements IEventoServices {
     private RepositorioDeEventos eventos = new RepositorioDeEventos();
 
     @Override
-    public void cadastrarEventoNoRepositorio() throws InvalidEventoTypeException {
+    public void cadastrarEventoNoRepositorio() throws InvalidEventoTypeException, SQLException {
         System.out.println("Nome do evento:");
         String nome = scanner.nextLine();
         System.out.println("Data do evento:");
@@ -45,6 +44,7 @@ public class EventosServices implements IEventoServices {
         String palestrante = "";
         String assunto = "";
         String artista = "";
+        int id = 0;
         if (tipoOpc == 1) {
             System.out.println("Motivo:");
             motivo = scanner.nextLine();
@@ -64,33 +64,27 @@ public class EventosServices implements IEventoServices {
             System.out.println("Artista:");
             artista = scanner.nextLine();
         }
-        Evento evento = criarEvento(nome, data, valorIngresso, quantidadeVagas, tipoEvento, motivo, curso, padre,
+        Evento evento = criarEvento(id, nome, data, valorIngresso, quantidadeVagas, tipoEvento, motivo, curso, padre,
                 palestrante, assunto, artista);
-        if (evento != null) {
-            eventos.ListarEventos().add(evento);
-            System.out.println("Evento agendado com sucesso!");
-            System.out.println("=============================================");
-        } else {
-            throw new InvalidEventoTypeException(EnumEventoException.TIPO_INVALIDO.toString());
-        }
+        new RepositorioDeEventos().salvar(evento);
     }
 
-    private Evento criarEvento(String nome, String data, double valorIngresso, int quantidadeVagas,
+    private Evento criarEvento(int id, String nome, String data, double valorIngresso, int quantidadeVagas,
             TipoEvento tipoEvento, String motivo, String curso, String padre, String palestrante, String assunto,
             String artista) {
         switch (tipoEvento) {
             case EVENTOFERIADO:
-                return new EventoFeriado(nome, data, valorIngresso, quantidadeVagas, motivo);
+                return new EventoFeriado(id, nome, data, valorIngresso, quantidadeVagas, motivo);
             case EVENTOFORMATURA:
-                return new EventoFormatura(nome, data, valorIngresso, quantidadeVagas, curso);
+                return new EventoFormatura(id, nome, data, valorIngresso, quantidadeVagas, curso);
             case EVENTOIGREJA:
-                return new EventoIgreja(nome, data, valorIngresso, quantidadeVagas, padre);
+                return new EventoIgreja(id, nome, data, valorIngresso, quantidadeVagas, padre);
             case EVENTOPALESTRA:
-                return new EventoPalestra(nome, data, valorIngresso, quantidadeVagas, palestrante);
+                return new EventoPalestra(id, nome, data, valorIngresso, quantidadeVagas, palestrante);
             case EVENTOREUNIAO:
-                return new EventoReuniao(nome, data, valorIngresso, quantidadeVagas, assunto);
+                return new EventoReuniao(id, nome, data, valorIngresso, quantidadeVagas, assunto);
             case EVENTOSHOW:
-                return new EventoShow(nome, data, valorIngresso, quantidadeVagas, artista);
+                return new EventoShow(id, nome, data, valorIngresso, quantidadeVagas, artista);
             default:
                 return null;
         }
@@ -116,13 +110,13 @@ public class EventosServices implements IEventoServices {
     }
 
     @Override
-    public void listarEventos() {
-        if (eventos.ListarEventos().isEmpty()) {
-            System.out.println("Não existe nenum evento cadastrado!");
+    public void listarEventos() throws SQLException {
+        if (eventos.listarEventos().isEmpty()) {
+            System.out.println("Não existe nenhum evento cadastrado!");
         } else {
             System.out.println("|-=======================================-|");
-            for (int i = 0; i < eventos.ListarEventos().size(); i++) {
-                Evento evento = eventos.ListarEventos().get(i);
+            for (int i = 0; i < eventos.listarEventos().size(); i++) {
+                Evento evento = eventos.listarEventos().get(i);
                 String detalhes = "";
                 System.out.println("Id: " + i + " | Tipo: " + evento.getTipoEvento().toString() + " | Título: "
                         + evento.getNome());
@@ -131,7 +125,7 @@ public class EventosServices implements IEventoServices {
                 System.out.println("Data: " + evento.getData());
                 if (evento instanceof EventoFeriado) {
                     EventoFeriado eventoFeriado = (EventoFeriado) evento;
-                    detalhes = "Feriado: " + eventoFeriado.getMotivo();
+                    detalhes = "Motivo: " + eventoFeriado.getMotivo();
                 } else if (evento instanceof EventoFormatura) {
                     EventoFormatura eventoFormatura = (EventoFormatura) evento;
                     detalhes = "Curso: " + eventoFormatura.getCurso();
@@ -157,11 +151,11 @@ public class EventosServices implements IEventoServices {
     }
 
     @Override
-    public void editarEventos() {
+    public void editarEventos() throws SQLException {
         System.out.println("Qual evento? (por id)");
         int idEvento = scanner.nextInt();
         scanner.nextLine();
-        Evento eventoEscolhido = eventos.ListarEventos().get(idEvento);
+        Evento eventoEscolhido = eventos.listarEventos().get(idEvento);
         System.out.println("Novo nome: ");
         String novoNome = scanner.nextLine();
         eventoEscolhido.setNome(novoNome);
@@ -207,93 +201,16 @@ public class EventosServices implements IEventoServices {
             String novoArtista = scanner.nextLine();
             eventoShow.setArtista(novoArtista);
         }
+        new RepositorioDeEventos().alterar(eventoEscolhido, eventoEscolhido.getTipoEvento().toString());
     }
 
     @Override
-    public void apagarEvento() {
+    public void apagarEvento() throws SQLException {
         System.out.println("Qual evento você deseja apagar? (por id)");
         int opc = scanner.nextInt();
-        Evento eventoSelecionado = eventos.ListarEventos().get(opc);
+        Evento eventoSelecionado = eventos.listarEventos().get(opc);
         System.out.println("Evento " + eventoSelecionado.getNome() + " Cancelado com sucesso!");
-        eventos.ListarEventos().remove(eventoSelecionado);
-    }
-
-    // INSTÂNCIA DO REPOSITÓRIO DE PARTICIPANTES
-
-    public void cadastrarParticipante() {
-        System.out.println("Você deseja cadastrar em qual evento? (pelo id)");
-        int opc = scanner.nextInt();
-        scanner.nextLine();
-        Evento eventoSelecionado = eventos.ListarEventos().get(opc);
-        System.out.println("Nome do participante : ");
-        String nome = scanner.nextLine();
-        System.out.println("Idade do participante : ");
-        int idade = scanner.nextInt();
-        scanner.nextLine();
-        System.out.println("Dinheiro do participante : ");
-        double dinheiro = scanner.nextDouble();
-        scanner.nextLine();
-        System.out.println("CPF do participante : ");
-        String cpf = scanner.nextLine();
-        Pessoa pessoa = new Pessoa(nome, idade, dinheiro, cpf);
-        eventoSelecionado.listarPessoas().add(pessoa);
-    }
-
-    public void editarParticipante() {
-        listarEventos();
-        System.out.println("Em qual evento está o participante? (Por id)");
-        int opc = scanner.nextInt();
-        scanner.nextLine();
-        Evento eventoSelecionado = eventos.ListarEventos().get(opc);
-        mostrarParticipantes(opc);
-        System.out.println("Qual participante deseja editar? (Por id)");
-        int opcParticipante = scanner.nextInt();
-        scanner.nextLine(); 
-        Pessoa pessoa = eventoSelecionado.listarPessoas().get(opcParticipante);
-        System.out.println("Qual novo nome ? ");
-        String novoNome = scanner.nextLine();
-        pessoa.setNome(novoNome);
-        System.out.println("Qual nova idade ? ");
-        int novaIdade = scanner.nextInt();
-        scanner.nextLine();
-        pessoa.setIdade(novaIdade);
-        System.out.println("Qual novo dinheiro ? ");
-        double novoDinheiro = scanner.nextDouble();
-        scanner.nextLine();
-        pessoa.setDinheiro(novoDinheiro);
-        System.out.println("Qual novo CPF ? ");
-        String novoCpf = scanner.nextLine();
-        scanner.nextLine();
-        pessoa.setCpf(novoCpf);
-    }
-
-    public void mostrarParticipantes(int index) {
-        Evento eventoSelecionado = eventos.ListarEventos().get(index);
-        System.out.println("========================");
-        for (int i = 0; i < eventoSelecionado.listarPessoas().size(); i++) {
-            Pessoa pessoa = eventoSelecionado.listarPessoas().get(i);
-            System.out.println("Id: " + i);
-            System.out.println("Nome: " + pessoa.getNome());
-            System.out.println("Idade: " + pessoa.getIdade());
-            System.out.println("Cpf: " + pessoa.getCpf());
-            System.out.println("Dinheiro: " + pessoa.getDinheiro());
-            System.out.println("========================");
-        }
-    }
-
-    public void apagarParticipante() {
-        listarEventos();
-        System.out.println("Qual evento o participante está cadastrado? (pelo id)");
-        int opc = scanner.nextInt();
-        scanner.nextLine();
-        Evento eventoSelecionado = eventos.ListarEventos().get(opc);
-        mostrarParticipantes(opc);
-        System.out.println("Qual o participante você deseja apagar? (pelo id)");
-        int opcParticipante = scanner.nextInt();
-        scanner.nextLine();
-        Pessoa participante = eventoSelecionado.listarPessoas().get(opcParticipante);
-        eventoSelecionado.listarPessoas().remove(participante);
-        System.out.println("Participante apagado com sucesso!");
+        eventos.excluir(eventoSelecionado.getId(), eventoSelecionado.getTipoEvento().toString());
     }
 
 }
