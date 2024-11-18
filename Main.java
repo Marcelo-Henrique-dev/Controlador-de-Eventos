@@ -4,7 +4,6 @@ import java.util.Scanner;
 import exceptions.InvalidEventoTypeException;
 import servicos.ClientesServices;
 import servicos.EventosServices;
-
 public class Main{
     
     private static Scanner scanner = new Scanner(System.in);
@@ -12,7 +11,11 @@ public class Main{
     private static ClientesServices clientesServices = new ClientesServices();
     public static void main(String[] args) throws InvalidEventoTypeException, SQLException {
         int opc;
-        do{
+        do {
+            System.out.println("=================================");
+            System.out.println("| Projeto feito por: |");
+            System.out.println("| Marcelo Henrique | Aquiles Arruda | José Renato | Adriano Ramos |");
+            System.out.println("=================================");
             System.out.println("|======- Menu -======|");
             System.out.println("| 1 - Cadastra evento | 2 - Visualizar eventos por tipo | 3 - Editar Evento | 4 - Cancelar Evento |");
             System.out.println("| 5 - Cadastrar Cliente | 6 - Listar Clientes | 7 - Editar Cliente | 8 - Apagar Cliente |");
@@ -52,7 +55,7 @@ public class Main{
                     System.out.println("Opção Inválida");
                     break;
             }
-        }while(opc != 0);
+        } while (opc != 0);
     }
 
 }
