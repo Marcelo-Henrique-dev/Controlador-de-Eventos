@@ -210,7 +210,7 @@ public class EventosServices implements IEventoServices {
         int opc = scanner.nextInt();
         Evento eventoSelecionado = eventos.listarEventos().get(opc);
         System.out.println("Evento " + eventoSelecionado.getNome() + " Cancelado com sucesso!");
-        eventos.excluir(eventoSelecionado.getId(), eventoSelecionado.getTipoEvento().toString());
+        eventos.excluir(eventoSelecionado);
     }
 
 }

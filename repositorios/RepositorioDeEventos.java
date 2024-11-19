@@ -257,31 +257,77 @@ public class RepositorioDeEventos implements IEventoRepository {
     }
 
     @Override
-    public void excluir(int idEvento, String tipoEvento) throws SQLException {
-        String deleteSpecifcSql = "DELETE FROM "+tipoEvento.toLowerCase()+" WHERE idevento = ?";
-        try(PreparedStatement stmtSpecific = connection.prepareStatement(deleteSpecifcSql)){
-            stmtSpecific.setInt(1, idEvento);
+    public void excluir(Evento eventoSelecionado) throws SQLException {
+        // Deletar dados específicos do evento
+        String deleteSpecificSql = "DELETE FROM " + eventoSelecionado.getTipoEvento().toString().toLowerCase() + " WHERE idevento = ?";
+        try (PreparedStatement stmtSpecific = connection.prepareStatement(deleteSpecificSql)) {
+            stmtSpecific.setInt(1, eventoSelecionado.getId());
             stmtSpecific.executeUpdate();
-        }catch(Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
-            throw new SQLException("Erro ao apagar dados específicos "+e);
+            throw new SQLException("Erro ao apagar dados específicos: " + e);
         }
-        String deleteClientes = "DELETE FROM cliente WHERE idevento = ?";
-        try(PreparedStatement stmtClientes = connection.prepareStatement(deleteClientes)){
-            stmtClientes.setInt(1, idEvento);
-            stmtClientes.executeUpdate();
-        }catch(Exception e){
+    
+        // Deletar associações na tabela cliente_evento
+        String selectClientesSql = "SELECT codCliente FROM cliente_evento WHERE codEvento = ?";
+        ArrayList<String> clientesParaDeletar = new ArrayList<>();
+        try (PreparedStatement stmtSelectClientes = connection.prepareStatement(selectClientesSql)) {
+            stmtSelectClientes.setInt(1, eventoSelecionado.getId());
+            ResultSet rs = stmtSelectClientes.executeQuery();
+            while (rs.next()) {
+                clientesParaDeletar.add(rs.getString("codCliente"));
+            }
+        } catch (Exception e) {
             e.printStackTrace();
-            throw new SQLException("Erro ao deletar clientes do evento "+e);
+            throw new SQLException("Erro ao selecionar clientes do evento: " + e);
         }
+    
+        // Deletar as associações de cliente_evento antes de deletar os clientes
+        String deleteClientesEventoSql = "DELETE FROM cliente_evento WHERE codEvento = ?";
+        try (PreparedStatement stmtClientesEvento = connection.prepareStatement(deleteClientesEventoSql)) {
+            stmtClientesEvento.setInt(1, eventoSelecionado.getId());
+            stmtClientesEvento.executeUpdate();
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new SQLException("Erro ao deletar clientes do evento: " + e);
+        }
+    
+        // Deletar telefones dos clientes
+        String deleteTelefonesSql = "DELETE FROM telefone_cliente WHERE cpf_cliente = ?";
+        try (PreparedStatement stmtDeleteTelefones = connection.prepareStatement(deleteTelefonesSql)) {
+            for (String cpfCliente : clientesParaDeletar) {
+                stmtDeleteTelefones.setString(1, cpfCliente);
+                stmtDeleteTelefones.executeUpdate();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new SQLException("Erro ao deletar telefones dos clientes: " + e);
+        }
+    
+        // Deletar clientes da tabela cliente
+        String deleteClientesSql = "DELETE FROM cliente WHERE cpf = ?";
+        try (PreparedStatement stmtDeleteClientes = connection.prepareStatement(deleteClientesSql)) {
+            for (String cpfCliente : clientesParaDeletar) {
+                stmtDeleteClientes.setString(1, cpfCliente);
+                stmtDeleteClientes.executeUpdate();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new SQLException("Erro ao deletar clientes: " + e);
+        }
+    
+        // Deletar o evento da tabela evento
         String deleteEventoSql = "DELETE FROM evento WHERE idevento = ?";
-        try(PreparedStatement stmtEvento = connection.prepareStatement(deleteEventoSql)){
-            stmtEvento.setInt(1, idEvento);
+        try (PreparedStatement stmtEvento = connection.prepareStatement(deleteEventoSql)) {
+            stmtEvento.setInt(1, eventoSelecionado.getId());
             stmtEvento.executeUpdate();
-        }catch(Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
-            throw new SQLException("Erro ao deletar evento"+e);
+            throw new SQLException("Erro ao deletar evento: " + e);
         }
+    
         System.out.println("Evento deletado com sucesso!");
     }
+    
+    
 }

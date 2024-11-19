@@ -19,7 +19,7 @@ public abstract class Evento {
         this.valorIngresso = valorIngresso;
         this.quantidadeVagas = quantidadeVagas;
         this.tipoEvento = tipoEvento;
-        this.pessoas = new ArrayList<Cliente>(this.quantidadeVagas);
+        this.pessoas = new ArrayList<Cliente>();
     }
 
     public String getNome() {

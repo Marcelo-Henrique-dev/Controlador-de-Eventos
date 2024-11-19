@@ -1,12 +1,14 @@
 package entidades;
 
+import java.util.ArrayList;
+
 public class Cliente {
     private String cpf;
     private String nome;
     private int idade;
     private double dinheiro;
-    private String telefone;
     private int codEvento;
+    private ArrayList<String> telefones;
 
     public Cliente(String cpf, String nome, int idade, double dinheiro, int codEvento) {
         this.cpf = cpf;
@@ -14,6 +16,7 @@ public class Cliente {
         this.idade = idade;
         this.dinheiro = dinheiro;
         this.codEvento = codEvento;
+        this.telefones = new ArrayList<>();
     }
 
     public String getNome() {
@@ -48,19 +51,23 @@ public class Cliente {
         this.cpf = cpf;
     }
 
-    public void setTelefone(String telefone){
-        this.telefone = telefone;
+    public void addTelefone(String telefone) {
+        this.telefones.add(telefone);
     }
 
-    public String getTelefone(){
-        return this.telefone;
+    public ArrayList<String> listarTelefones() {
+        return this.telefones;
     }
 
-    public void setCodEvento(int codEvento){
+    public void setTelefones(ArrayList<String> telefones) {
+        this.telefones = telefones;
+    }
+
+    public void setCodEvento(int codEvento) {
         this.codEvento = codEvento;
     }
 
-    public int getCodEvento(){
+    public int getCodEvento() {
         return this.codEvento;
     }
 
